@@ -1,38 +1,29 @@
-# AI Functionality Demo (GitHub Copilot Example)
+# AI Functionality Demo — Live Input Version
 
-> “AI is not intelligence — it's functionality.”  
-> This tiny web demo helps you show in class that AI can **perform** a task (calculate tax) but does not **understand** purpose or context (e.g., student exemption).
+This is the **live-input** variant of your classroom demo. It is designed for inviting a volunteer to type on stage.
 
-## 🎯 Goal
-- Let one volunteer play the **AI assistant**.
-- Show the class how AI computes quickly but ignores context.
-- Deliver the closing line together: **“AI helps. Humans decide.”**
+## What’s new vs the previous version?
+- **Typing support**: When the student types a salary and presses **Enter**, the **AI** calculates immediately.
+- **Prompt box**: A simple text prompt (mimicking Copilot) reacts to Enter if it includes the word **tax**.
+- **Context dropdown**: Choose hidden context (`student`, `senior`, `non-resident`). AI ignores it until you **Reveal Context**.
+- **Human Judgment** applies policy after context is revealed.
 
-## 🧪 What the demo does
-1. Enter a **salary** and click **AI Calculate** → AI computes tax with a fixed rule (33%).
-2. Click **Reveal Context** → The person is a **student (exempt)**.  
-   - AI output stays the same (it ignores context).
-3. Click **Human Judgment** → Applies the exemption (tax becomes 0) and explains why.
+## How to run
+- Open `index.html` in any modern browser. No install required.
 
-## 🧭 How to use in class
-- Open `index.html` in a browser (no install needed).
-- Invite one student up to be your “AI assistant”.
-- You click buttons as you narrate (or let them click) and ask the class:
-  - “Should the AI change its answer after we learn the person is a student?”
-- Wrap with: **“AI helps. Humans decide.”**
+## Suggested on-stage flow
+1. Invite a volunteer as your **AI v1.0**.
+2. Ask them to type a salary value (e.g., `100000`) and press **Enter**.  
+   → **AI Output** shows `33%` calculation.
+3. Select a hidden context (e.g., **Student (exempt)**) and click **Reveal Context**.  
+   Ask the class: “Should the AI change its answer?”
+4. Click **Human Judgment**.  
+   → Human Output applies policy (e.g., tax becomes 0 for student).
+5. End with: **“AI helps. Humans decide.”**
 
-## 🗣️ 30–60s Script (you can read this)
-> “Let’s test how smart AI is. Suppose salary is \$100,000.  
-> AI calculates tax at 33% — super fast.  
-> But now we reveal context: the person is a student and legally exempt.  
-> Does the AI change its answer? No — it performs the function, but doesn’t understand purpose.  
-> Humans bring judgment and ethics.  
-> **AI helps. Humans decide.**”
+## Customization ideas
+- Replace 33% with your country’s default rate.
+- Add more contexts (e.g., low-income threshold, charity entity, GST zero-rated supplies).
+- Localize the UI strings to Chinese or bilingual.
 
-## 🧩 Extend the demo
-- Change rate to fit your country.
-- Add zero-rated / exempt toggles (GST / VAT).
-- Show “code snippets” on screen to mimic Copilot suggestions.
-
-## License
-MIT
+MIT License
