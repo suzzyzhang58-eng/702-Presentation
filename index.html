@@ -1,248 +1,166 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>AI Functionality Demo — Live Input (GitHub Copilot Analogy)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Functionality Demo — Two Scenarios</title>
 <style>
-  :root { --bg:#0b0c10; --panel:#121318; --muted:#8a94a6; --text:#e7ecf3; --brand:#7aa2ff; --ok:#71f0b6; --warn:#ffcc66; --bad:#ff7a90; --code:#0e1116; --card:#141824; }
-  html,body { margin:0; height:100%; background:var(--bg); color:var(--text); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; }
-  .wrap { max-width:1000px; margin:0 auto; padding:28px 16px 40px; }
-  h1 { font-size:28px; margin:8px 0 4px; }
-  .sub { color:var(--muted); margin-bottom:22px; }
-  .grid { display:grid; grid-template-columns: 1.2fr 0.8fr; gap:18px; align-items:start; }
-  .card { background:var(--card); border:1px solid #22283b; border-radius:16px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.25); }
-  .card h2 { margin:0 0 10px; font-size:18px; }
-  label { display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
-  input[type="number"], input[type="text"], select { width:100%; padding:12px 12px; border-radius:12px; background:var(--panel); color:var(--text); border:1px solid #242b3d; outline:none; }
-  input[type="number"]:focus, input[type="text"]:focus, select:focus { border-color:var(--brand); box-shadow:0 0 0 3px rgba(122,162,255,.15); }
-  .row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-  button { cursor:pointer; border:1px solid #2a3250; background:#172036; color:#dfe7ff; padding:10px 14px; border-radius:12px; transition:.15s transform ease, .15s background ease, .15s border-color ease; font-weight:600; }
-  button:hover { transform:translateY(-1px); border-color:#3a4580; }
-  .btn-primary { background:#1c2c58; border-color:#32457e; }
-  .btn-ghost { background:#131827; color:#bcd0ff; }
-  .btn-ok { background:#123b2d; border-color:#1f664f; color:#d6ffe8; }
-  .btn-warn { background:#3c2a11; border-color:#60451b; color:#ffe8b8; }
-  .btn-bad { background:#3b121c; border-color:#6c2032; color:#ffd6df; }
-  .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #2a3250; background:#121729; color:#b7c6ff; }
-  .code { background:var(--code); color:#c9defc; border:1px solid #1c2233; border-radius:12px; padding:12px; overflow:auto; font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace; font-size:13px; }
-  .out { background:#10131c; border:1px solid #21293a; border-radius:12px; padding:12px; }
-  .out h3 { margin:0 0 6px; font-size:14px; color:#cfe1ff; }
-  .muted { color:var(--muted); }
-  .big { font-size:34px; font-weight:800; letter-spacing:.2px; }
-  .center { text-align:center; }
-  .stack { display:flex; flex-direction:column; gap:10px; }
-  .footer { margin-top:18px; color:var(--muted); font-size:13px; }
-  .kbd { font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace; background:#0f1220; border:1px solid #2a3250; padding:2px 6px; border-radius:6px; font-size:12px; }
-  .hint { font-size:12px; color:#a6b0c2; margin-top:6px; }
-  .badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; border:1px solid #2a3250; background:#10162a; color:#bcd0ff; }
+  body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#0b0c10;color:#e7ecf3}
+  .wrap{max-width:900px;margin:0 auto;padding:24px}
+  h1{font-size:26px;margin:0 0 8px}
+  h2{font-size:20px;margin:20px 0 10px}
+  p{color:#9aa4b8;margin:6px 0 16px}
+  .card{background:#141824;border:1px solid #22283b;border-radius:12px;padding:16px;margin-top:12px}
+  label{display:block;font-size:13px;color:#9aa4b8;margin-bottom:6px}
+  input,select,button{font:inherit}
+  input[type=number],select{width:100%;padding:10px;border-radius:10px;border:1px solid #2a3250;background:#121318;color:#e7ecf3}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  button{cursor:pointer;border:1px solid #2a3250;background:#172036;color:#dfe7ff;padding:10px 14px;border-radius:10px}
+  button:hover{transform:translateY(-1px)}
+  .out{background:#10131c;border:1px solid #21293a;border-radius:10px;padding:10px;margin-top:8px;min-height:56px}
+  .muted{color:#9aa4b8}
+  nav{display:flex;gap:8px;margin-bottom:20px}
+  nav button{padding:8px 16px}
+  .active{background:#1f2b4a;border-color:#3a4f80}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>AI Functionality Demo — <span class="pill">Live Input + Volunteer</span></h1>
-    <div class="sub">AI can <em>perform</em> tasks (functionality) but doesn’t <em>understand</em> purpose or ethics (intelligence). This demo responds to typing and <span class="badge">Enter</span> key.</div>
+<div class="wrap">
+  <h1>AI Functionality Demo — Two Scenarios</h1>
+  <nav>
+    <button id="btnTax" class="active" onclick="showScenario('tax')">💰 Income Tax</button>
+    <button id="btnGST" onclick="showScenario('gst')">🧾 GST / VAT</button>
+  </nav>
 
-    <div class="grid">
-      <!-- Left: Controls + Prompt-as-code -->
-      <div class="card">
-        <h2>1) Set the scenario</h2>
-        <label for="salary">Salary (e.g., 100000)</label>
-        <input id="salary" type="number" min="0" step="100" value="100000" placeholder="Enter salary and press Enter…" />
-        <div class="hint">Tip: Ask your volunteer to type a number and press <span class="kbd">Enter</span>.</div>
-
-        <label for="promptInput" style="margin-top:12px;">AI Prompt (like typing to Copilot)</label>
-        <input id="promptInput" type="text" placeholder="e.g., calculate income tax for salary" value="calculate income tax for salary" />
-        <div class="hint">Press <span class="kbd">Enter</span> to make AI respond to the prompt.</div>
-
-        <label for="context" style="margin-top:12px;">Context (hidden from AI)</label>
-        <select id="context">
-          <option value="none" selected>— hidden —</option>
-          <option value="student">Student (exempt)</option>
-          <option value="senior">Senior (10% rebate)</option>
-          <option value="nonresident">Non-resident (flat 15%)</option>
-        </select>
-
-        <div class="row">
-          <button class="btn-primary" id="btn-ai">🤖 AI Calculate</button>
-          <button class="btn-warn" id="btn-reveal">🎭 Reveal Context</button>
-          <button class="btn-ok" id="btn-human">👩‍💼 Human Judgment</button>
-          <button class="btn-ghost" id="btn-reset">↺ Reset</button>
-        </div>
-
-        <div style="height:10px"></div>
-
-        <h2>2) What AI 'sees' (like Copilot)</h2>
-        <div class="code" id="promptView">
-# Task: Calculate income tax for a salary
-# Rule (AI uses a fixed function): tax = salary × 0.33
-# Context: (hidden)
-def calculate_tax(salary):
-    return salary * 0.33
-        </div>
-
-        <div class="footer">Flow idea: Volunteer types salary → press <span class="kbd">Enter</span> (AI calculates) → you click <span class="kbd">Reveal Context</span> → ask, “Should AI change its answer?” → click <span class="kbd">Human Judgment</span>.</div>
+  <!-- Scenario 1 -->
+  <div id="taxScenario">
+    <h2>Scenario 1 — Income Tax</h2>
+    <p>AI always applies 33% tax and ignores hidden context (student, senior, non-resident). Humans apply judgment after context is revealed.</p>
+    <div class="card">
+      <label for="salary">Salary (type a number and press Enter)</label>
+      <input id="salary" type="number" value="100000" onkeydown="if(event.key==='Enter'){aiTax()}">
+      <label for="context" style="margin-top:10px">Context (hidden from AI)</label>
+      <select id="context">
+        <option value="none" selected>— hidden —</option>
+        <option value="student">Student (exempt)</option>
+        <option value="senior">Senior (10% rebate)</option>
+        <option value="nonresident">Non-resident (flat 15%)</option>
+      </select>
+      <div class="row">
+        <button onclick="aiTax()">🤖 AI Calculate</button>
+        <button onclick="revealContext()">🎭 Reveal Context</button>
+        <button onclick="humanTax()">👩‍💼 Human Judgment</button>
+        <button onclick="resetTax()">↺ Reset</button>
       </div>
-
-      <!-- Right: Outputs -->
-      <div class="stack">
-        <div class="card">
-          <h2>🤖 AI Output</h2>
-          <div class="out" id="ai-out">
-            <h3>Status</h3>
-            <div class="muted">Waiting for input…</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>👩‍💼 Human Output</h2>
-          <div class="out" id="human-out">
-            <h3>Status</h3>
-            <div class="muted">Waiting for judgment…</div>
-          </div>
-        </div>
-
-        <div class="card center">
-          <div class="muted">Closing line</div>
-          <div class="big" id="closing">AI helps. Humans decide.</div>
-        </div>
-      </div>
+      <div class="out" id="aiTaxOut"><span class="muted">AI waiting…</span></div>
+      <div class="out" id="humanTaxOut"><span class="muted">Human waiting…</span></div>
+      <div class="out" id="ctxTax"><span class="muted">Context: hidden</span></div>
     </div>
   </div>
 
+  <!-- Scenario 2 -->
+  <div id="gstScenario" style="display:none">
+    <h2>Scenario 2 — GST / VAT on Sales</h2>
+    <p>AI automatically adds 15% GST to all sales. Humans must interpret item type (standard, zero-rated, exempt).</p>
+    <div class="card">
+      <label for="amount">Sale Amount (type and press Enter)</label>
+      <input id="amount" type="number" value="1000" onkeydown="if(event.key==='Enter'){aiGST()}">
+      <label for="item" style="margin-top:10px">Item Type (hidden from AI)</label>
+      <select id="item">
+        <option value="hidden" selected>— hidden —</option>
+        <option value="standard">Standard-rated (15%)</option>
+        <option value="zero">Zero-rated (0%)</option>
+        <option value="exempt">Exempt (0%)</option>
+      </select>
+      <div class="row">
+        <button onclick="aiGST()">🤖 AI Calculate</button>
+        <button onclick="revealItem()">🎭 Reveal Item</button>
+        <button onclick="humanGST()">👩‍💼 Human Judgment</button>
+        <button onclick="resetGST()">↺ Reset</button>
+      </div>
+      <div class="out" id="aiGSTOut"><span class="muted">AI waiting…</span></div>
+      <div class="out" id="humanGSTOut"><span class="muted">Human waiting…</span></div>
+      <div class="out" id="ctxGST"><span class="muted">Item: hidden</span></div>
+    </div>
+  </div>
+</div>
+
 <script>
-(function(){
-  const $ = (id)=>document.getElementById(id);
-  const salaryEl = $('salary');
-  const promptInput = $('promptInput');
-  const contextEl = $('context');
-  const aiOut = $('ai-out');
-  const humanOut = $('human-out');
-  const promptView = $('promptView');
+function showScenario(id){
+  document.getElementById('taxScenario').style.display=id==='tax'?'block':'none';
+  document.getElementById('gstScenario').style.display=id==='gst'?'block':'none';
+  document.getElementById('btnTax').classList.toggle('active',id==='tax');
+  document.getElementById('btnGST').classList.toggle('active',id==='gst');
+}
 
-  let contextRevealed = false;
+/* ----------- Income Tax ----------- */
+let contextRevealed=false;
+function fmt(n){return Number(n||0).toLocaleString(undefined,{maximumFractionDigits:0});}
+function aiTax(){
+  const s=Number(document.getElementById('salary').value);
+  if(!s||s<=0){document.getElementById('aiTaxOut').innerHTML='Invalid input.';return;}
+  document.getElementById('aiTaxOut').innerHTML='AI says: Tax = $'+fmt(s*0.33)+'<div class="muted">Rule: 33% of $'+fmt(s)+(contextRevealed?' • ignores context':'')+'</div>';
+}
+function revealContext(){
+  contextRevealed=true;
+  const v=document.getElementById('context').value;
+  const label=v==='student'?'Student (exempt)':v==='senior'?'Senior (10% rebate)':v==='nonresident'?'Non-resident (15%)':'hidden';
+  document.getElementById('ctxTax').innerHTML='Context revealed: <b>'+label+'</b>';
+  document.getElementById('aiTaxOut').innerHTML+='<div class="muted">Context revealed → AI output unchanged.</div>';
+}
+function humanTax(){
+  const s=Number(document.getElementById('salary').value);
+  if(!s||s<=0){document.getElementById('humanTaxOut').innerHTML='Invalid input.';return;}
+  if(!contextRevealed){document.getElementById('humanTaxOut').innerHTML='Humans need context first.';return;}
+  const v=document.getElementById('context').value;
+  let tax=s*0.33,reason='Default 33%.';
+  if(v==='student'){tax=0;reason='Student exemption.';}
+  else if(v==='senior'){tax=(s*0.33)*0.9;reason='Senior rebate 10%.';}
+  else if(v==='nonresident'){tax=s*0.15;reason='Non-resident 15% flat.';}
+  document.getElementById('humanTaxOut').innerHTML='Human says: Tax = $'+fmt(tax)+'<div class="muted">'+reason+'</div>';
+}
+function resetTax(){
+  contextRevealed=false;
+  document.getElementById('salary').value=100000;
+  document.getElementById('context').value='none';
+  document.getElementById('aiTaxOut').innerHTML='<span class="muted">AI waiting…</span>';
+  document.getElementById('humanTaxOut').innerHTML='<span class="muted">Human waiting…</span>';
+  document.getElementById('ctxTax').innerHTML='<span class="muted">Context: hidden</span>';
+}
 
-  function fmtMoney(n, decimals=0){
-    const num = Number(n||0);
-    return num.toLocaleString(undefined,{minimumFractionDigits:decimals, maximumFractionDigits:decimals});
-  }
-
-  function updatePromptView(){
-    const ctx = contextRevealed ? contextEl.value : 'hidden';
-    const ctxText =
-      ctx === 'hidden' ? '(hidden)' :
-      ctx === 'student' ? 'Student (exempt)' :
-      ctx === 'senior' ? 'Senior (10% rebate)' :
-      ctx === 'nonresident' ? 'Non-resident (flat 15%)' : '(hidden)';
-    promptView.textContent =
-`# Task: Calculate income tax for a salary
-# Rule (AI uses a fixed function): tax = salary × 0.33
-# Context: ${ctxText}
-def calculate_tax(salary):
-    return salary * 0.33`;
-  }
-
-  function setAI(primary, secondary, note){
-    aiOut.innerHTML = `
-      <h3>Status</h3>
-      <div>${primary}</div>
-      ${secondary?'<div class="muted" style="margin-top:6px">'+secondary+'</div>':''}
-      ${note?'<div class="muted" style="margin-top:6px"><em>'+note+'</em></div>':''}
-    `;
-  }
-  function setHuman(primary, secondary){
-    humanOut.innerHTML = `
-      <h3>Status</h3>
-      <div>${primary}</div>
-      ${secondary?'<div class="muted" style="margin-top:6px">'+secondary+'</div>':''}
-    `;
-  }
-
-  function aiCalculate(){
-    const s = Number(salaryEl.value||0);
-    if (!s || s<0) {
-      setAI('Invalid input.','Please type a positive salary and press Enter.');
-      return;
-    }
-    // AI fixed rule: 33%, always ignores context
-    const tax = s * 0.33;
-    setAI(`Tax = $${fmtMoney(tax)}`, `Computed with fixed rule: 33% of $${fmtMoney(s)}`, contextRevealed ? 'Context ignored.' : '');
-  }
-
-  function humanJudge(){
-    const s = Number(salaryEl.value||0);
-    if (!contextRevealed) {
-      setHuman('Insufficient context.','Humans ask: Who is the taxpayer? Any exemptions? What’s the policy?');
-      return;
-    }
-    if (!s || s<0) {
-      setHuman('Invalid salary.','Please enter a positive number.');
-      return;
-    }
-    const ctx = contextEl.value;
-    let result = 0;
-    let reason = '';
-    if (ctx === 'student') {
-      result = 0;
-      reason = 'Student exemption policy applied.';
-    } else if (ctx === 'senior') {
-      // senior: 10% rebate on tax
-      const base = s * 0.33;
-      result = base * 0.90;
-      reason = 'Senior rebate: 10% of tax reduced.';
-    } else if (ctx === 'nonresident') {
-      result = s * 0.15;
-      reason = 'Non-resident flat tax at 15%.';
-    } else {
-      result = s * 0.33;
-      reason = 'No special context; default rule applies.';
-    }
-    setHuman(`Tax = $${fmtMoney(result)}`, `Reason: ${reason}`);
-  }
-
-  function resetAll(){
-    contextRevealed = false;
-    salaryEl.value = 100000;
-    promptInput.value = 'calculate income tax for salary';
-    contextEl.value = 'none';
-    setAI('Waiting for input…','Ask your volunteer to type a salary and press Enter.');
-    setHuman('Waiting for judgment…','Reveal context, then apply policy.');
-    updatePromptView();
-  }
-
-  // Event listeners
-  $('btn-ai').addEventListener('click', aiCalculate);
-  $('btn-human').addEventListener('click', humanJudge);
-  $('btn-reset').addEventListener('click', resetAll);
-  $('btn-reveal').addEventListener('click', ()=>{
-    contextRevealed = true;
-    updatePromptView();
-    // If AI already calculated, note that it won't self-correct
-    if (aiOut.textContent.includes('Tax =')) {
-      setAI(aiOut.querySelector('div:nth-child(2)').textContent, 'Context revealed. AI output unchanged.', 'AI performs function; it does not interpret purpose.');
-    }
-  });
-
-  // Live interactions
-  salaryEl.addEventListener('keydown', (e)=>{
-    if (e.key === 'Enter') aiCalculate();
-  });
-  promptInput.addEventListener('keydown', (e)=>{
-    if (e.key === 'Enter') {
-      // Only react to prompts that include 'tax' to mimic Copilot
-      const q = (promptInput.value||'').toLowerCase();
-      if (q.includes('tax')) aiCalculate();
-      else setAI('No action.','AI only responds to tax-related prompts in this demo.');
-    }
-  });
-  salaryEl.addEventListener('input', ()=>{
-    // If AI has already run once, let changes re-run to feel "live"
-    if (aiOut.textContent.includes('Tax =')) aiCalculate();
-  });
-
-  // Init
-  resetAll();
-})();
+/* ----------- GST ----------- */
+let itemRevealed=false;
+function fmt2(n,d=2){return Number(n||0).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});}
+function aiGST(){
+  const a=Number(document.getElementById('amount').value);
+  if(!a||a<=0){document.getElementById('aiGSTOut').innerHTML='Invalid input.';return;}
+  document.getElementById('aiGSTOut').innerHTML='AI says: Net $'+fmt2(a)+', GST (15%) $'+fmt2(a*0.15)+', Total $'+fmt2(a*1.15)+'<div class="muted">Always 15%'+(itemRevealed?' • ignores item type':'')+'</div>';
+}
+function revealItem(){
+  itemRevealed=true;
+  const v=document.getElementById('item').value;
+  const label=v==='standard'?'Standard-rated (15%)':v==='zero'?'Zero-rated (0%)':v==='exempt'?'Exempt (0%)':'hidden';
+  document.getElementById('ctxGST').innerHTML='Item revealed: <b>'+label+'</b>';
+  document.getElementById('aiGSTOut').innerHTML+='<div class="muted">Context revealed → AI output unchanged.</div>';
+}
+function humanGST(){
+  const a=Number(document.getElementById('amount').value);
+  if(!a||a<=0){document.getElementById('humanGSTOut').innerHTML='Invalid input.';return;}
+  if(!itemRevealed){document.getElementById('humanGSTOut').innerHTML='Humans need context first.';return;}
+  const v=document.getElementById('item').value;
+  let rate=0.15,reason='Standard 15%.';
+  if(v==='zero'){rate=0;reason='Zero-rated 0%.';}
+  else if(v==='exempt'){rate=0;reason='Exempt 0%.';}
+  document.getElementById('humanGSTOut').innerHTML='Human says: Net $'+fmt2(a)+', GST $'+fmt2(a*rate)+', Total $'+fmt2(a*(1+rate))+'<div class="muted">'+reason+'</div>';
+}
+function resetGST(){
+  itemRevealed=false;
+  document.getElementById('amount').value=1000;
+  document.getElementById('item').value='hidden';
+  document.getElementById('aiGSTOut').innerHTML='<span class="muted">AI waiting…</span>';
+  document.getElementById('humanGSTOut').innerHTML='<span class="muted">Human waiting…</span>';
+  document.getElementById('ctxGST').innerHTML='<span class="muted">Item: hidden</span>';
+}
 </script>
 </body>
 </html>
