@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI Functionality Demo — GitHub Copilot Example</title>
+<style>
+  :root { --bg:#0b0c10; --panel:#121318; --muted:#8a94a6; --text:#e7ecf3; --brand:#7aa2ff; --ok:#71f0b6; --warn:#ffcc66; --bad:#ff7a90; --code:#0e1116; --card:#141824; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--text); font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; }
+  .wrap { max-width:980px; margin:0 auto; padding:28px 16px 40px; }
+  h1 { font-size:28px; margin:8px 0 4px; }
+  .sub { color:var(--muted); margin-bottom:22px; }
+  .grid { display:grid; grid-template-columns: 1.2fr 0.8fr; gap:18px; align-items:start; }
+  .card { background:var(--card); border:1px solid #22283b; border-radius:16px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+  .card h2 { margin:0 0 10px; font-size:18px; }
+  label { display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
+  input[type="number"] { width:100%; padding:12px 12px; border-radius:12px; background:var(--panel); color:var(--text); border:1px solid #242b3d; outline:none; }
+  input[type="number"]:focus { border-color:var(--brand); box-shadow:0 0 0 3px rgba(122,162,255,.15); }
+  .row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+  button { cursor:pointer; border:1px solid #2a3250; background:#172036; color:#dfe7ff; padding:10px 14px; border-radius:12px; transition:.15s transform ease, .15s background ease, .15s border-color ease; font-weight:600; }
+  button:hover { transform:translateY(-1px); border-color:#3a4580; }
+  .btn-primary { background:#1c2c58; border-color:#32457e; }
+  .btn-ghost { background:#131827; color:#bcd0ff; }
+  .btn-ok { background:#123b2d; border-color:#1f664f; color:#d6ffe8; }
+  .btn-warn { background:#3c2a11; border-color:#60451b; color:#ffe8b8; }
+  .btn-bad { background:#3b121c; border-color:#6c2032; color:#ffd6df; }
+  .pill { display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #2a3250; background:#121729; color:#b7c6ff; }
+  .code { background:var(--code); color:#c9defc; border:1px solid #1c2233; border-radius:12px; padding:12px; overflow:auto; font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace; font-size:13px; }
+  .out { background:#10131c; border:1px solid #21293a; border-radius:12px; padding:12px; }
+  .out h3 { margin:0 0 6px; font-size:14px; color:#cfe1ff; }
+  .muted { color:var(--muted); }
+  .big { font-size:34px; font-weight:800; letter-spacing:.2px; }
+  .center { text-align:center; }
+  .stack { display:flex; flex-direction:column; gap:10px; }
+  .footer { margin-top:18px; color:var(--muted); font-size:13px; }
+  .kbd { font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace; background:#0f1220; border:1px solid #2a3250; padding:2px 6px; border-radius:6px; font-size:12px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>AI Functionality Demo — <span class="pill">GitHub Copilot Analogy</span></h1>
+    <div class="sub">AI can <em>perform</em> tasks (functionality) but doesn’t <em>understand</em> purpose or ethics (intelligence).</div>
+
+    <div class="grid">
+      <!-- Left: Controls + Prompt-as-code -->
+      <div class="card">
+        <h2>1) Set the scenario</h2>
+        <label for="salary">Salary (e.g., 100000)</label>
+        <input id="salary" type="number" min="0" step="100" value="100000" />
+
+        <div class="row">
+          <button class="btn-primary" id="btn-ai">🤖 AI Calculate</button>
+          <button class="btn-warn" id="btn-context">🎭 Reveal Context: Student (Exempt)</button>
+          <button class="btn-ok" id="btn-human">👩‍💼 Human Judgment</button>
+          <button class="btn-ghost" id="btn-reset">↺ Reset</button>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <h2>2) Prompt (like Copilot)</h2>
+        <div class="code" id="prompt">
+# Task: Calculate income tax for a salary
+# Rule (AI uses a fixed function): tax = salary × 0.33
+# Context: (hidden until revealed)
+def calculate_tax(salary):
+    return salary * 0.33
+        </div>
+
+        <div class="footer">Tip: Invite a volunteer to be your “AI assistant”. Let them click <span class="kbd">AI Calculate</span>, then you click <span class="kbd">Reveal Context</span>, and ask the class if the AI should change its answer.</div>
+      </div>
+
+      <!-- Right: Outputs -->
+      <div class="stack">
+        <div class="card">
+          <h2>🤖 AI Output</h2>
+          <div class="out" id="ai-out">
+            <h3>Status</h3>
+            <div class="muted">Waiting for input…</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>👩‍💼 Human Output</h2>
+          <div class="out" id="human-out">
+            <h3>Status</h3>
+            <div class="muted">Waiting for judgment…</div>
+          </div>
+        </div>
+
+        <div class="card center">
+          <div class="muted">Closing line</div>
+          <div class="big" id="closing">AI helps. Humans decide.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const $ = (id)=>document.getElementById(id);
+  const salaryEl = $('salary');
+  const aiOut = $('ai-out');
+  const humanOut = $('human-out');
+  const prompt = $('prompt');
+
+  let contextRevealed = false;
+
+  function fmt(n){
+    return Number(n).toLocaleString(undefined,{maximumFractionDigits:0});
+  }
+
+  function setAI(status, detail, tone=''){
+    aiOut.innerHTML = `
+      <h3>Status</h3>
+      <div>${status}</div>
+      ${detail ? `<div class="muted" style="margin-top:6px">${detail}</div>`:''}
+      ${tone ? `<div class="muted" style="margin-top:6px"><em>${tone}</em></div>`:''}
+    `;
+  }
+  function setHuman(status, detail){
+    humanOut.innerHTML = `
+      <h3>Status</h3>
+      <div>${status}</div>
+      ${detail ? `<div class="muted" style="margin-top:6px">${detail}</div>`:''}
+    `;
+  }
+
+  function reset(){
+    contextRevealed = false;
+    salaryEl.value = 100000;
+    setAI('Waiting for input…','Click “AI Calculate” to perform the function.');
+    setHuman('Waiting for judgment…','Reveal context, then apply policy.');
+    prompt.textContent =
+`# Task: Calculate income tax for a salary
+# Rule (AI uses a fixed function): tax = salary × 0.33
+# Context: (hidden until revealed)
+def calculate_tax(salary):
+    return salary * 0.33`;
+  }
+
+  $('btn-ai').addEventListener('click', ()=>{
+    const s = Number(salaryEl.value||0);
+    con
